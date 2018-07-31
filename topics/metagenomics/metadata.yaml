@@ -43,8 +43,9 @@ material:
     contributors:
       - shiltemann
       - bebatut
-    translation:
-      - jp
+    translations:
+      - name: 日本語 / Japanese
+        code: jp
   -
     title: "Analyses of metagenomics data - The global picture"
     type: "tutorial"

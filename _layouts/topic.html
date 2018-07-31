@@ -99,17 +99,17 @@ layout: base
                                   {% icon tutorial %}
                                 </a>
                                 {% elsif material.hands_on %}
-                                    {% if material.translation %}
+                                    {% if material.translations %}
                                         <a href="#" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="Where to run the tutorial">
                                             {% icon tutorial %}
                                         </a>
                                         <ul class="dropdown-menu">
                                             <a class="dropdown-item" href="{{ site.baseurl }}/topics/{{ topic.name }}/tutorials/{{ material.name }}/tutorial.html" title="{{ inst[0] }}">
-                                                :gb:
+                                                English
                                             </a>
-                                        {% for lang in material.translation %}
-                                            <a class="dropdown-item" href="{{ site.baseurl }}/topics/{{ topic.name }}/tutorials/{{ material.name }}/tutorial_{{ lang }}.html" title="{{ inst[0] }}">
-                                                :{{ lang }}:
+                                        {% for lang in material.translations %}
+                                            <a class="dropdown-item" href="{{ site.baseurl }}/topics/{{ topic.name }}/tutorials/{{ material.name }}/tutorial_{{ lang.code }}.html" title="{{ inst[0] }}">
+                                                {{ lang.name }}
                                             </a>
                                         {% endfor %}
                                         </ul>
