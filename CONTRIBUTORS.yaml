@@ -555,6 +555,10 @@ workflow4metabolomics:
 wm75:
     name: Wolfgang Maier
 
+xgaia:
+    name: Xavier Garnier
+    email: xavier.garnier@irisa.fr
+
 yguitton:
     name: Yann Guitton
 
