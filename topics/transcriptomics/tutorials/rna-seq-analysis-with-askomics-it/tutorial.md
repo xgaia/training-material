@@ -4,11 +4,11 @@ layout: tutorial_hands_on
 title: RNA-Seq analysis with AskOmics Interactive Tool
 zenodo_link: 'https://zenodo.org/record/3601076'
 questions:
-- how to exploit RNA-Seq results with other datasets using AskOmics?
+- How to integrate RNA-Seq results with other datasets using AskOmics?
 objectives:
 - Launch an AskOmics Interactive Tool
 - Integrate RNA-Seq and reference datasets into AskOmics
-- Create a complex query to get over-expressed genes, their location on the reference genome, and if they are included in a known QTL.
+- Create a complex query to get over-expressed genes, their location on the reference genome, and check if they are included in a known QTL.
 time_estimation: 1H
 key_points:
 - AskOmics helps to integrate multiple data sources into an RDF database without knowing the Semantic Web
@@ -23,19 +23,19 @@ contributors:
 {:.no_toc}
 
 <!-- AskOmics intro -->
-AskOmics is a web software for data integration and query using the Semantic Web. It helps users to convert multiple data sources (CSV/TSV files, GFF and BED annotation) into RDF triples, and perform complex queries using a user-friendly interface.
+AskOmics is a web software for data integration and query using the Semantic Web technologies. It helps users to convert multiple data sources (CSV/TSV files, GFF and BED annotation) into RDF triples, and perform complex queries using a user-friendly interface.
 
 <!-- AskOmics for RNA-Seq -->
-AskOmics comes useful for cross-referencing results datasets with reference data. In RNA-Seq studies, we often need to filter the results on the fold change, to get the differentially expressed genes, and the p value, to get the significant results. then, the obtained results have to be mapped on reference genome to get the location on the genome. Other process can be done to know of the obtained genes are located on QTL related to a phenotype. All this process involve several tools and command line to parse the different data format, and to map datasets on other. AskOmics offer a solution to 1) convert the multiple format to one and 2) use a user-friendly interface to perform complex SPARQL queries on the RDF dataset.
+AskOmics comes useful for cross-referencing results datasets with various reference data. For example, in RNA-Seq studies, we often need to filter the results on the fold change and the p-value, to get the most significant differentially expressed genes. If you are studying a particular phenotype and already know the position of some QTL associated to this phenotype, you would then want to cross this gene list with the reference annotation of the corresponding genome to get the genes locations. Finally, you would perform a last step to determine which gene is located within a QTL related to the phenotype. The whole process involves several tools to parse and manipulate the different data format, and to map datasets on other. AskOmics offer a solution to 1) automatically convert the multiple formats to RDF and 2) use a user-friendly interface to perform complex SPARQL queries on the RDF datasets to find the genes you are interested in.
 
 <!-- The data -->
-In this tutorial, We will use a file of differentially expressed results. This file is provided for you here. To generate the file yourself, see the [RNA-Seq counts to gene]({{ site.baseurl }}{% link topics/transcriptomics/tutorials/rna-seq-counts-to-genes/tutorial.md %}) tutorial. The file used here was generated from limma-voom but you could use a file from any RNA-seq differential expression tool, such as edgeR or DESeq2, as long as it has the required columns (see below).
+In this tutorial, we will use results from a differential expression analysis. This file is provided for you below. You could also generate the file yourself, by following the [RNA-Seq counts to gene tutorial]({{ site.baseurl }}{% link topics/transcriptomics/tutorials/rna-seq-counts-to-genes/tutorial.md %}). The file used here was generated from limma-voom but you could use a file from any RNA-seq differential expression tool, such as edgeR or DESeq2, as long as it has the required columns (see below).
 
-The differentially expressed results will be mapped on mouse genome annotation, in general feature format (GFF). The file provided is a subset of the mouse annotation (GRCm38.p6) obtain from [Ensembl](http://www.ensembl.org/Mus_musculus/Info/Index).
+The differentially expressed results will be linked to the mouse genome annotation, in general feature format (GFF). The file provided is a subset of the mouse annotation (GRCm38.p6) obtained from [Ensembl](http://www.ensembl.org/Mus_musculus/Info/Index).
 
-In the differentially expressed file, gene are described by a symbol. In the annotation file, its an Ensembl id. To link the 2 datasets, we will need a file to map the gene symbol with Ensembl id.
+In the differentially expressed file, gene are described by a symbol. However, in the annotation file, each gene is represented by its Ensembl id. To link the 2 datasets, we will need a file to map the gene symbol with Ensembl id. <!-- TODO where does come this file? -->
 
-Finally, we'll integrate a file about quantitative trait loci (QTL) to find if our differentially expressed genes are located inside QTL. This file is a subset of result query of [Mouse Genome Informatics](http://www.informatics.jax.org).
+Finally, we'll user a file containing quantitative trait loci (QTL) information, to find if our differentially expressed genes are located inside a known QTL. This file is a subset of a query performed on [Mouse Genome Informatics](http://www.informatics.jax.org).
 
 > ### Agenda
 >
@@ -103,6 +103,8 @@ Click on the {% icon galaxy-eye %} (eye) icon and take a look at the uploaded fi
 
 # Upload inputs into AskOmics
 
+<!-- TODO explain what we want to do: launch a new AskOmics instance, load all the data into it, ... -->
+
 ## Launch AskOmics Interactive Tool
 
 > ### {% icon hands_on %} Hands-on: Launch AskOmics IT
@@ -110,14 +112,16 @@ Click on the {% icon galaxy-eye %} (eye) icon and take a look at the uploaded fi
 >    - {% icon param-file %} *"A dataset to load into AskOmics"*: `DE results`
 {: .hands_on}
 
-Wait for view until the tool is available, then click on the link to display the tool.
+Wait for AskOmics to be ready to use: click on the **view** link when it appears.
 
 
 ![home page](images/home.png "AskOmics home page")
 
-Once the Interactive Tool is launched, AskOmics display the start page. You can see that their is no data yet. Next step is to upload data
+Once the Interactive Tool is launched, AskOmics display the start page. You can see that there is no data available yet. The next step is to load data into AskOmics.
 
-## Upload files from Galaxy to AskOmics
+## Upload datasets from Galaxy to AskOmics
+
+<!-- TODO explain that there are two steps in askomics: uploading data, then integrating it into the AskOmics database-->
 
 > ### {% icon hands_on %} Hands-on: Upload files into AskOmics
 > 1. **Files** page to see the uploaded files. There is only `DE results` for now.
@@ -132,17 +136,19 @@ Now that all the files are on the AskOmics server, its time to integrate them!
 # Integrate input files to AskOmics
 
 AskOmics conversion into RDF is called *integration*.
+<!-- TODO what is integration? choose which data to load from each dataset, and how they are connected to other datasets -->
 
 > ### {% icon hands_on %} Hands-on: Integrate data
 > 1. **Files** page, select all the input files
 > 2. **Integrate**
 {: .hands_on}
 
-The **Integrate** page show a preview of the data present in the file depending of the data type.
+The **Integrate** page shows a preview of the data present in the file depending of the data type.
 
 ## Integrate GFF files
 
-The GFF preview show the entities that the file contain. We can select the entity we want to be integrated.
+<!-- TODO what is an entity in a gff file? how do we choose? -->
+The GFF preview shows the entities that the file contain. We can select the entities we want to be integrated.
 
 > ### {% icon hands_on %} Hands-on: Integrate `Mus musculus annotation`
 > 1. Search for `Mus musculus annotation (preview)`
@@ -151,9 +157,9 @@ The GFF preview show the entities that the file contain. We can select the entit
 >  ![mus musculus annotation preview](images/mus_musculus_annotation_preview.png "Mus musculus annotation preview")
 {: .hands_on}
 
-## Integration of TSV files
+## Integration of tabular (TSV) files
 
-The TSV preview show an HTML table representing the TSV file. During integration, AskOmics we will convert the file using the header.
+The TSV preview show an HTML table representing the TSV file. During integration, AskOmics will convert the file using the header.
 
 <!-- First col: entity, then, attribute -->
 The first column of a TSV file will be the *entity* name. Other columns of the file will be *attributes* of the *entity*. *Labels* of the *entity* and *attributes* will be set by the header. This *labels* can be edited by clicking on it.  
@@ -216,7 +222,7 @@ Integration can take some times depending on the file size. The **Datasets** pag
 
 # Query
 
-Once all the data of interest are integrated (converted to RDF graphs), its time to query them. Querying rdf data is done by the SPARQL language. AskOmics have a user-friendly interface to build SPARQL queries without knowing SPARQL language.
+Once all the data of interest is integrated (converted to RDF graphs), its time to query them. Querying RDF data is done by using the SPARQL language. Fortunately, AskOmics provides a user-friendly interface to build SPARQL queries without having to learn the SPARQL language.
 
 ## Query builder overview
 
@@ -257,7 +263,7 @@ On the right, attributes of the selected entity are displayed as attribute boxes
 
 Next query will search for all over-expressed genes. Genes are considered over-expressed if the log fold change is > 2. We are oly interested by  significant results (Adj P value ≤ 0.05)
 
-Back to the query builder, 
+Back to the query builder,
 
 > ### {% icon hands_on %} Hands-on: Filter attributes to get significant over-expressed genes
 > 1. Filter `logFC` with `> 2`
